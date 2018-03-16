@@ -1,23 +1,17 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-
-import * as d3Select from 'd3-selection';
-import {
-  scaleLinear, scaleOrdinal, scalePow, scaleTime, scalePoint
-} from 'd3-scale';
-import * as d3Array from 'd3-array';
-
+import * as d3 from 'd3';
 import { DataPreprocessorService } from '../shared/data-preprocessor.service';
 
 @Component({
   selector: 'app-visualization-geomap',
   templateUrl: './geomap.component.html',
   styleUrls: ['./geomap.component.css'],
-  providers: [ DataPreprocessorService]
+  providers: [DataPreprocessorService]
 })
 export class GeomapComponent implements OnInit {
   parentNativeElement: ElementRef;
-  width = 420;
-  barHeight = 20;
+  width = 960;
+  height = 1160;
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // to get native parent element of this component
@@ -28,37 +22,23 @@ export class GeomapComponent implements OnInit {
   }
 
   drawVisualization() {
-    const container = d3Select.select(this.parentNativeElement)
-      .select('#geomapContainer');
+    const container = d3.select(this.parentNativeElement)
+      .select('#geomapContainer'); // dont change
 
-    const baseSVG = container.append('svg')
+    const baseSVG = container.append('svg') // change width and height according to geomap
       .attr('class', 'baseSVG')
       .attr('width', this.width)
-      .attr('height', this.barHeight * this.dataPreprocess.data.length);
+      .attr('height', this.height);
 
-    const x = scaleLinear(); // x-scale
-    x.domain([0, d3Array.max(this.dataPreprocess.data)])
-      .range([0, this.width]);
-
-    const bars = baseSVG.selectAll('g').this.dataPreprocess.data(this.dataPreprocess.data)
-      .enter().append('g')// entering bars
-      .attr('transform', (d, i) => 'translate(0,' + i * this.barHeight + ')');
-
-    bars.append('rect')
-      .attr('width', (d) => x(d))
-      .attr('height', this.barHeight - 1)
-      .attr('fill', 'steelblue');
-
-    bars.append('text')
-      .attr('x', (d) => x(d) - 3)
-      .attr('y', this.barHeight / 2)
-      .attr('dy', '.35em')
-      .text((d) => d)
-      .attr('fill', 'black')
-      .attr('font', '10px sans-serif')
-      .attr('text-anchor', 'end');
-
-    bars.exit().remove();
+      d3.json('../shared/us-10m.json', (error, us) => {
+        if (error) {
+        return console.error(error);
+        }
+        console.log(us);
+        // svg.append("path")
+        //     .datum(topojson.feature(uk, uk.objects.subunits))
+        //     .attr("d", d3.geo.path().projection(d3.geo.mercator()));
+      });
   }
 }
 
