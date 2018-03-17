@@ -1,6 +1,9 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
+import * as topojson from 'topojson';
+
 import { DataPreprocessorService } from '../shared/data-preprocessor.service';
+import * as us10m from '../shared/us-10m.json';
 
 @Component({
   selector: 'app-visualization-geomap',
@@ -10,8 +13,9 @@ import { DataPreprocessorService } from '../shared/data-preprocessor.service';
 })
 export class GeomapComponent implements OnInit {
   parentNativeElement: ElementRef;
-  width = 960;
-  height = 1160;
+  width = window.innerWidth - 300;
+  height = window.innerHeight - 100;
+  baseSVG: any;
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // to get native parent element of this component
@@ -21,24 +25,41 @@ export class GeomapComponent implements OnInit {
     this.drawVisualization();
   }
 
+  zoom() {
+    d3.zoom().scaleExtent([1, 10])
+      .on('zoom', () => this.zoomed());
+  }
+
+  /*This function adds zoom functionality on the map SVG layer */
+  zoomed() {
+    console.log('zooomed');
+    this.baseSVG.attr(
+      'transform', d3.event.transform
+    ); // applying a event transform on map svg layer.
+  }
+
+
   drawVisualization() {
     const container = d3.select(this.parentNativeElement)
-      .select('#geomapContainer'); // dont change
+      .select('#geomapContainer');
 
-    const baseSVG = container.append('svg') // change width and height according to geomap
-      .attr('class', 'baseSVG')
-      .attr('width', this.width)
-      .attr('height', this.height);
+    this.baseSVG = container.append('svg')
+      .attr('preserveAspectRatio', 'xMidYMid slice')
+      .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
+      .classed('svg-content-responsive', true)
+      .call(this.zoom);
 
-      d3.json('../shared/us-10m.json', (error, us) => {
-        if (error) {
-        return console.error(error);
-        }
-        console.log(us);
-        // svg.append("path")
-        //     .datum(topojson.feature(uk, uk.objects.subunits))
-        //     .attr("d", d3.geo.path().projection(d3.geo.mercator()));
-      });
+    const projection = d3.geoAlbers();
+    const path = d3.geoPath(projection);
+    const features = topojson.feature(us10m, us10m.objects.states).features;
+
+    const states = this.baseSVG.selectAll('path')
+      .data(features)
+      .enter()
+      .append('path')
+      .style('fill', 'gray')
+      .style('stroke', 'black')
+      .attr('d', path);
   }
 }
 
