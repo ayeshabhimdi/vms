@@ -14,7 +14,7 @@ import * as us10m from '../shared/us-10m.json';
 export class GeomapComponent implements OnInit {
   parentNativeElement: ElementRef;
   width = window.innerWidth - 300;
-  height = window.innerHeight - 100;
+  height = window.innerHeight - 200;
   baseSVG: any;
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
