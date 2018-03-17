@@ -34,7 +34,6 @@ export class GeomapComponent implements OnInit {
     ); // applying a event transform on map svg layer.
   }
 
-
   drawVisualization() {
     const projection = d3.geoAlbers();
     const path = d3.geoPath(projection);
@@ -64,5 +63,3 @@ export class GeomapComponent implements OnInit {
       .attr('d', path);
   }
 }
-
-
