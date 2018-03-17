@@ -16,6 +16,8 @@ export class GeomapComponent implements OnInit {
   width = window.innerWidth - 300;
   height = window.innerHeight - 200;
   baseSVG: any;
+  mapSVG: any;
+  zoom: any;
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // to get native parent element of this component
@@ -25,35 +27,35 @@ export class GeomapComponent implements OnInit {
     this.drawVisualization();
   }
 
-  zoom() {
-    d3.zoom().scaleExtent([1, 10])
-      .on('zoom', () => this.zoomed());
-  }
-
   /*This function adds zoom functionality on the map SVG layer */
   zoomed() {
-    console.log('zooomed');
-    this.baseSVG.attr(
+    this.mapSVG.attr(
       'transform', d3.event.transform
     ); // applying a event transform on map svg layer.
   }
 
 
   drawVisualization() {
+    const projection = d3.geoAlbers();
+    const path = d3.geoPath(projection);
+    const features = topojson.feature(us10m, us10m.objects.states).features;
+
     const container = d3.select(this.parentNativeElement)
       .select('#geomapContainer');
 
-    this.baseSVG = container.append('svg')
+    this.zoom = d3.zoom().scaleExtent([1, 10]) // zoom config
+      .on('zoom', () => this.zoomed());
+
+    this.baseSVG = container.append('svg') // base SVG container and its props
       .attr('preserveAspectRatio', 'xMidYMid slice')
       .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
       .classed('svg-content-responsive', true)
       .call(this.zoom);
 
-    const projection = d3.geoAlbers();
-    const path = d3.geoPath(projection);
-    const features = topojson.feature(us10m, us10m.objects.states).features;
+    this.mapSVG = this.baseSVG.append('g') // map base layer added to svg container
+      .attr('class', 'maplayer');
 
-    const states = this.baseSVG.selectAll('path')
+    const states = this.mapSVG.selectAll('path')
       .data(features)
       .enter()
       .append('path')
