@@ -4,6 +4,7 @@ import * as topojson from 'topojson';
 
 import { DataPreprocessorService } from '../shared/data-preprocessor.service';
 import * as us10m from '../shared/us-10m.json';
+import * as mapData from '../shared/data_makerspaces_only.json';
 
 @Component({
   selector: 'app-visualization-geomap',
@@ -13,8 +14,8 @@ import * as us10m from '../shared/us-10m.json';
 })
 export class GeomapComponent implements OnInit {
   parentNativeElement: ElementRef;
-  width = window.innerWidth - 300;
-  height = window.innerHeight - 200;
+  width = window.innerWidth - 50;
+  height = window.innerHeight - 50;
   baseSVG: any;
   mapSVG: any;
   zoom: any;
@@ -31,12 +32,14 @@ export class GeomapComponent implements OnInit {
   zoomed() {
     this.mapSVG.attr(
       'transform', d3.event.transform
-    ); // applying a event transform on map svg layer.
+    ); // applying an event transform on map svg layer.
   }
 
   drawVisualization() {
-    const projection = d3.geoAlbers();
-    const path = d3.geoPath(projection);
+    const projection = d3.geoAlbers()
+                          .scale( 600 )
+                          .center( [0, 152.313] ); // added scale and center
+    const path = d3.geoPath().projection( projection );
     const features = topojson.feature(us10m, us10m.objects.states).features;
 
     const container = d3.select(this.parentNativeElement)
@@ -49,17 +52,29 @@ export class GeomapComponent implements OnInit {
       .attr('preserveAspectRatio', 'xMidYMid slice')
       .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
       .classed('svg-content-responsive', true)
-      .call(this.zoom);
+      .call(this.zoom)
+      .attr('fill', 'aliceblue');
 
     this.mapSVG = this.baseSVG.append('g') // map base layer added to svg container
       .attr('class', 'maplayer');
 
-    const states = this.mapSVG.selectAll('path')
+    const states = this.mapSVG.selectAll('path') // Select non-existent elements, bind the data, append the elements
       .data(features)
       .enter()
       .append('path')
-      .style('fill', 'gray')
+      .style('fill', 'white')
       .style('stroke', 'black')
       .attr('d', path);
+
+    // adding data to the map
+      const points = this.mapSVG.append('g');
+
+      points.selectAll('path')
+        .data(mapData.features)
+        .enter()
+        .append('path')
+        .attr('fill', 'blue')
+        .attr( 'd', path)
+        .style('opacity', 0.5);
   }
 }
