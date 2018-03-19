@@ -1,21 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { VisualizationModule } from './visualization';
+import { VmsUiModule } from './vms-ui';
 
 import { AppComponent } from './app.component';
-import { RightTabComponent } from './vms-ui/right-tab/right-tab.component';
-import { SelectLegendsComponent } from './vms-iu/select-legends/select-legends.component';
-
 
 @NgModule({
   declarations: [
-    AppComponent,
-    RightTabComponent,
-    SelectLegendsComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    VisualizationModule
+    VisualizationModule,
+    VmsUiModule
   ],
   providers: [],
   bootstrap: [AppComponent]
