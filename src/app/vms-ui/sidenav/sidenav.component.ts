@@ -14,8 +14,9 @@ export class SidenavComponent implements OnInit {
   ngOnInit() {
   }
 
-  onNodeClick(event: any) {
-    this.makerspaceName = event.properties.name;
-    this.sidenavElement.toggle();
+  onNodeClick(data: any) {
+    this.makerspaceName = data.properties.name;
+    this.sidenavElement.open();
+    }
   }
 }
