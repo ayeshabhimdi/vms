@@ -1,21 +1,28 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  EventEmitter,
+  Output } from '@angular/core';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 
-import { DataPreprocessorService } from '../shared/data-preprocessor.service';
-import * as us10m from '../shared/us-10m.json';
-import * as mapData from '../shared/data_makerspaces_only.json';
+import { DataPreprocessorService } from './shared/data-preprocessor.service';
+import * as us10m from './shared/us-10m.json';
+import * as mapData from './shared/data_makerspaces_only.json';
 
 @Component({
   selector: 'app-visualization-geomap',
   templateUrl: './geomap.component.html',
-  styleUrls: ['./geomap.component.css'],
+  styleUrls: ['./geomap.component.sass'],
   providers: [DataPreprocessorService]
 })
 export class GeomapComponent implements OnInit {
+  @Output() nodeclick: EventEmitter<any> = new EventEmitter();
+
   parentNativeElement: ElementRef;
-  width = window.innerWidth - 50;
-  height = window.innerHeight - 50;
+  width = 910;
+  height = 550;
   baseSVG: any;
   mapSVG: any;
   zoom: any;
@@ -75,6 +82,9 @@ export class GeomapComponent implements OnInit {
         .append('path')
         .attr('fill', 'blue')
         .attr( 'd', path)
-        .style('opacity', 0.5);
+        .style('opacity', 0.5)
+        .style('cursor', 'pointer')
+        .on('click', (d) => this.nodeclick.emit(d));
   }
+
 }
