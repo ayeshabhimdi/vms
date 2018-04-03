@@ -16,6 +16,6 @@ import { HomeComponent } from './home/home.component';
   exports: [
    SidenavComponent
   ],
-  declarations: [SelectLegendsComponent, SidenavComponent, HomeComponent]
+  declarations: [ SelectLegendsComponent, SidenavComponent, HomeComponent ]
 })
 export class VmsUiModule { }

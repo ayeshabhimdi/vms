@@ -9,7 +9,7 @@ import * as topojson from 'topojson';
 
 import { DataPreprocessorService } from './shared/data-preprocessor.service';
 import * as us10m from './shared/us-10m.json';
-import * as mapData from './shared/data_makerspaces_only.json';
+
 
 @Component({
   selector: 'app-visualization-geomap',
@@ -26,9 +26,11 @@ export class GeomapComponent implements OnInit {
   baseSVG: any;
   mapSVG: any;
   zoom: any;
+  data: any;
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // to get native parent element of this component
+    this.data = dataPreprocess.processedData;
   }
 
   ngOnInit() {
@@ -77,7 +79,7 @@ export class GeomapComponent implements OnInit {
       const points = this.mapSVG.append('g');
 
       points.selectAll('path')
-        .data(mapData.features)
+        .data(this.data.features)
         .enter()
         .append('path')
         .attr('fill', 'blue')

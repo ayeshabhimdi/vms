@@ -2,6 +2,8 @@
 <mat-sidenav-container class="sidenav">
   <mat-sidenav #sidenav mode="side" position="end">
     {{ makerspaceName }}
+    <app-demographics [selectedMakerspace]="selectedMakerspace"></app-demographics>
+    <button mat-raised-button (click)="sidenav.close()">Close</button>
   </mat-sidenav>
 
   <mat-sidenav-content>
