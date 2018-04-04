@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<mat-sidenav-container class="sidenav">
-  <mat-sidenav #sidenav mode="side" position="end">
+<mat-drawer-container class="container">
+  <mat-drawer #drawer class="sidenav" mode="side" position="end" #sidenav>
     {{ makerspaceName }}
     <app-demographics [selectedMakerspace]="selectedMakerspace"></app-demographics>
-    <button mat-raised-button (click)="sidenav.close()">Close</button>
-  </mat-sidenav>
+  </mat-drawer>
 
-  <mat-sidenav-content>
-       <app-visualization-geomap (nodeclick)="onNodeClick($event)">
-       </app-visualization-geomap>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-
+  <div class="sidenav-content">
+    <app-visualization-geomap (nodeclick)="onNodeClick($event)">
+    </app-visualization-geomap>
+  </div>
+</mat-drawer-container>

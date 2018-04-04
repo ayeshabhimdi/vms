@@ -1,7 +1,9 @@
 import { Component,
   OnInit,
   ElementRef,
-  Input
+  Input,
+  OnChanges,
+  SimpleChange
 } from '@angular/core';
 
 import * as d3Scale from 'd3-scale';
@@ -9,6 +11,7 @@ import * as d3Format from 'd3-format';
 import * as d3Array from 'd3-array';
 import * as d3Shape from 'd3-shape';
 import * as d3Selection from 'd3-selection';
+import * as d3Axis from 'd3-axis';
 
 import { DataPreprocessorService } from './shared/data-preprocessor.service';
 
@@ -18,11 +21,11 @@ import { DataPreprocessorService } from './shared/data-preprocessor.service';
   styleUrls: ['./demographics.component.sass'],
   providers: [DataPreprocessorService]
 })
-export class DemographicsComponent implements OnInit {
+export class DemographicsComponent implements OnInit, OnChanges {
   @Input() selectedMakerspace: any;
 
   parentNativeElement: ElementRef;
-  width = 210;
+  width = 400;
   height = 350;
   baseSVG: any;
   xScale: any;
@@ -32,14 +35,28 @@ export class DemographicsComponent implements OnInit {
   xScaleDomain: any;
   yScaleDomain: any;
   zScaleDomain: any;
+  mappedData: any;
 
   constructor(element: ElementRef, dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // 1
+    console.log(this.selectedMakerspace);
     this.data = dataPreprocess.processedData; // 12
   }
 
   ngOnInit() {
   }
+
+  ngOnChanges(changes: any) {
+    for (const propName in changes) {
+      if (propName === 'selectedMakerspace' && this[propName]) {
+        this.makeDomains();
+        this.setScales();
+        this.initVisualization();
+        this.drawBarChart();
+      }
+  }
+  }
+
   initVisualization() {
     const container = d3Selection.select(this.parentNativeElement)
       .select('#demographicsContainer');
@@ -50,31 +67,84 @@ export class DemographicsComponent implements OnInit {
       .append('g');
 
     this.makeDomains();
-
   }
 
   makeDomains() {
-    // let [age_0to5, age_6to10, age_11to15, age_16to20, age_above20, age_dont_know ] = [1, 2, 3, 4, 5, 0];
+    this.xScaleDomain = ['age_0to5', 'age_6to10', 'age_11to15', 'age_16to20', 'age_above20', 'age_dont_know'];
+    this.yScaleDomain = (({
+      age_0to5,
+      age_6to10,
+      age_11to15,
+      age_16to20,
+      age_above20,
+      age_dont_know}) => {
+        this.mappedData = [
+          { key: 'age_0to5', value: age_0to5 },
+          { key: 'age_6to10', value: age_6to10 },
+          { key: 'age_11to15', value: age_11to15 },
+          { key: 'age_16to20', value: age_16to20 },
+          { key: 'age_above20', value: age_above20 },
+          { key: 'age_dont_know', value: age_dont_know }
+        ];
+        return [
+        age_0to5,
+        age_6to10,
+        age_11to15,
+        age_16to20,
+        age_above20,
+        age_dont_know
+      ];
+    })(this.selectedMakerspace);
 
-    // let {[ age_0to5, age_6to10, age_11to15, age_16to20, age_above20, age_dont_know ] : this.xScaleDomain} = this.selectedMakerspace;
+    // this.zScaleDomain = (({
+    //   race_indian_alaska,
+    //   race_asian,
+    //   race_black,
+    //   race_hawaiian_pacific,
+    //   race_white,
+    //   race_two_plus,
+    //   race_dont_know }) => [
+    //     race_indian_alaska,
+    //     race_asian,
+    //     race_black,
+    //     race_hawaiian_pacific,
+    //     race_white,
+    //     race_two_plus,
+    //     race_dont_know
+    //   ])(this.selectedMakerspace);
+
   }
   // set scales
   setScales() {
     this.xScale = d3Scale.scaleBand()
-    .domain()
+    .domain(this.xScaleDomain)
     .rangeRound([0, this.width])
-    .paddingInner(0.05)
-    .align(0.1);
+    .padding(0.1);
 
     this.yScale = d3Scale.scaleLinear()
+    .domain(this.yScaleDomain)
     .rangeRound([this.height, 0]);
-
-    this.zScale = d3Scale.scaleOrdinal()
-    .range(['#98abc5', '#8a89a6', '#7b6888', '#6b486b', '#a05d56', '#d0743c', '#ff8c00']);
-
   }
 
-  drawStackedBarChart() {
+  drawBarChart() {
+  // append the rectangles for the bar chart
+  this.baseSVG.selectAll('.bar')
+  .data(this.mappedData)
+  .enter().append('rect')
+  .attr('class', 'bar')
+  .attr('x', (d) => this.xScale(d.key))
+  .attr('width', this.xScale.bandwidth())
+  .attr('y', (d) => this.yScale(d.value))
+  .attr('height', (d) => this.height - this.yScale(d.value));
+
+    // add the x Axis
+  this.baseSVG.append('g')
+    .attr('transform', 'translate(0,' + this.height + ')')
+    .call(d3Axis.axisBottom(this.xScale));
+
+    // add the y Axis
+  this.baseSVG.append('g')
+    .call(d3Axis.axisLeft(this.yScale));
 
   }
 

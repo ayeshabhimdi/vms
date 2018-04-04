@@ -8,7 +8,7 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson';
 
 import { DataPreprocessorService } from './shared/data-preprocessor.service';
-import * as us10m from './shared/us-10m.json';
+import * as us10m from '../shared/us-10m.json';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class GeomapComponent implements OnInit {
 
   parentNativeElement: ElementRef;
   width = 910;
-  height = 550;
+  height = 650;
   baseSVG: any;
   mapSVG: any;
   zoom: any;
