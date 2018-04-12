@@ -5,6 +5,7 @@ import { SharedModule } from '../shared';
 import { VisualizationModule } from '../visualization/visualization.module';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { HomeComponent } from './home/home.component';
+import { AttributeSelectorsComponent } from './attribute-selectors/attribute-selectors.component';
 
 
 @NgModule({
@@ -14,8 +15,8 @@ import { HomeComponent } from './home/home.component';
     VisualizationModule
   ],
   exports: [
-   SidenavComponent
+   HomeComponent
   ],
-  declarations: [ SidenavComponent, HomeComponent ]
+  declarations: [ SidenavComponent, HomeComponent, AttributeSelectorsComponent ]
 })
 export class VmsUiModule { }

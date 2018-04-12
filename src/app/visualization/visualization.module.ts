@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 import { GeomapComponent } from './geomap/geomap.component';
 import { DemographicsComponent } from './demographics/demographics.component';
 
+
 @NgModule({
   imports: [
     CommonModule
   ],
   exports: [
     GeomapComponent,
-    DemographicsComponent
+    DemographicsComponent,
+
   ],
   declarations: [GeomapComponent, DemographicsComponent]
 })
