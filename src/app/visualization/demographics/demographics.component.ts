@@ -49,6 +49,7 @@ export class DemographicsComponent implements OnInit, OnChanges {
   ngOnChanges(changes: any) {
     for (const propName in changes) {
       if (propName === 'selectedMakerspace' && this[propName]) {
+        this.clearBarChart();
         this.makeDomains();
         this.setScales();
         this.initVisualization();
@@ -56,6 +57,11 @@ export class DemographicsComponent implements OnInit, OnChanges {
       }
   }
   }
+    // clear before new selection
+    clearBarChart() {
+      d3Selection.select(this.parentNativeElement)
+        .select('#demographicsContainer').select('svg').remove();
+    }
 
   initVisualization() {
     const container = d3Selection.select(this.parentNativeElement)
@@ -112,7 +118,6 @@ export class DemographicsComponent implements OnInit, OnChanges {
     //     race_two_plus,
     //     race_dont_know
     //   ])(this.selectedMakerspace);
-
   }
   // set scales
   setScales() {
@@ -132,18 +137,22 @@ export class DemographicsComponent implements OnInit, OnChanges {
   .data(this.mappedData)
   .enter().append('rect')
   .attr('class', 'bar')
-  .attr('x', (d) => this.xScale(d.key))
+  .attr('x', (d) => this.xScale(d.key) - 45)
   .attr('width', this.xScale.bandwidth())
   .attr('y', (d) => this.yScale(d.value))
-  .attr('height', (d) => this.height - this.yScale(d.value));
+  .attr('height', (d) => this.height - this.yScale(d.value) - 19);
 
     // add the x Axis
   this.baseSVG.append('g')
-    .attr('transform', 'translate(0,' + this.height + ')')
+   // .attr('transform', 'translate(0,' + this.height + ')')
+   .attr('transform', 'translate(20,' + (this.yScale(0) - 19) + ')')
+   .attr('class', 'xAxis')
     .call(d3Axis.axisBottom(this.xScale));
 
     // add the y Axis
   this.baseSVG.append('g')
+    .attr('class', 'yAxis')
+    .attr('transform', 'translate(20,0)')
     .call(d3Axis.axisLeft(this.yScale));
 
   }

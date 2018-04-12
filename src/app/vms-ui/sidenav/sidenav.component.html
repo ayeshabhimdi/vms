@@ -2,9 +2,9 @@
 <mat-drawer-container class="container">
   <mat-drawer #drawer class="sidenav" mode="side" position="end" #sidenav>
     {{ makerspaceName }}
-    <app-demographics [selectedMakerspace]="selectedMakerspace"></app-demographics>
+    <app-demographics [selectedMakerspace]= "selectedMakerspace" ></app-demographics>
   </mat-drawer>
-
+  
   <div class="sidenav-content">
     <app-visualization-geomap (nodeclick)="onNodeClick($event)">
     </app-visualization-geomap>

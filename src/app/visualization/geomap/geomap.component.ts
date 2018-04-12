@@ -86,6 +86,7 @@ export class GeomapComponent implements OnInit {
         .attr( 'd', path)
         .style('opacity', 0.5)
         .style('cursor', 'pointer')
+        .attr('r', this.data.participant_year)
         .on('click', (d) => this.nodeclick.emit(d));
   }
 
