@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as mapData from '../../shared/data_usa_all.json';
+import * as mapData from './data_usa_all.json';
 
 @Injectable()
 export class DataPreprocessorService {

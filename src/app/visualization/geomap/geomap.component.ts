@@ -11,8 +11,9 @@ import {
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 
-import { DataPreprocessorService } from './shared/data-preprocessor.service';
-import * as us10m from '../shared/us-10m.json';
+import { DataPreprocessorService } from '../shared/geomap/data-preprocessor.service';
+import { makerspaceTypeColorMapping } from '../shared/geomap/encoding_mappings';
+import * as us10m from '../shared/geomap/us-10m.json';
 
 
 @Component({
@@ -33,13 +34,6 @@ export class GeomapComponent implements OnInit, OnChanges {
   mapSVG: any;
   zoom: any;
   data: any;
-  makerspaceTypeColorMapping = {
-    'After-school clubs and activities': 'green',
-    'Museum': 'maroon',
-    'Library': 'orange',
-    'Mobile': 'green',
-    'Other': 'pink'
-  };
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // to get native parent element of this component
@@ -56,10 +50,9 @@ export class GeomapComponent implements OnInit, OnChanges {
       this.baseSVG.selectAll('circle').transition().attr('r', 20);
     }
     if (('selectedColorEncoding' in changes) && !(changes.selectedColorEncoding.isFirstChange())) {
-      console.log(changes);
       if ( changes.selectedColorEncoding.currentValue === 'type') {
-      this.baseSVG.selectAll('circle').transition().attr('fill',
-        this.makerspaceTypeColorMapping[changes.selectedColorEncoding.currentValue]);
+      this.baseSVG.selectAll('circle').transition().attr('fill', (d) =>
+        makerspaceTypeColorMapping[d.properties.type]);
       }
     }
   }
