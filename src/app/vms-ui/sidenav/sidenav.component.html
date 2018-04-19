@@ -7,11 +7,13 @@
   
   <div class="sidenav-content">
     <div class="attribute">
-      <app-attribute-selectors>
+      <app-attribute-selectors #attributeSelector >
       </app-attribute-selectors>
     </div>
     <div class="geomap">
-      <app-visualization-geomap (nodeclick)="onNodeClick($event)">
+      <app-visualization-geomap (nodeclick)="onNodeClick($event)"
+      [selectedColorEncoding]="attributeSelector.colorEncodingSelected"
+      [selectedSizeEncoding] = "attributeSelector.sizeEncodingSelected">
       </app-visualization-geomap>
     </div>
   </div>

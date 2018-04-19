@@ -3,7 +3,11 @@ import {
   OnInit,
   ElementRef,
   EventEmitter,
-  Output } from '@angular/core';
+  Output,
+  OnChanges,
+  SimpleChanges,
+  Input
+} from '@angular/core';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 
@@ -17,7 +21,9 @@ import * as us10m from '../shared/us-10m.json';
   styleUrls: ['./geomap.component.sass'],
   providers: [DataPreprocessorService]
 })
-export class GeomapComponent implements OnInit {
+export class GeomapComponent implements OnInit, OnChanges {
+  @Input() selectedColorEncoding: any;
+  @Input() selectedSizeEncoding: any;
   @Output() nodeclick: EventEmitter<any> = new EventEmitter();
 
   parentNativeElement: ElementRef;
@@ -27,6 +33,13 @@ export class GeomapComponent implements OnInit {
   mapSVG: any;
   zoom: any;
   data: any;
+  makerspaceTypeColorMapping = {
+    'After-school clubs and activities': 'green',
+    'Museum': 'maroon',
+    'Library': 'orange',
+    'Mobile': 'green',
+    'Other': 'pink'
+  };
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // to get native parent element of this component
@@ -37,6 +50,19 @@ export class GeomapComponent implements OnInit {
     this.drawVisualization();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (('selectedSizeEncoding' in changes) && !(changes.selectedSizeEncoding.isFirstChange())) {
+      console.log(changes);
+      this.baseSVG.selectAll('circle').transition().attr('r', 20);
+    }
+    if (('selectedColorEncoding' in changes) && !(changes.selectedColorEncoding.isFirstChange())) {
+      console.log(changes);
+      if ( changes.selectedColorEncoding.currentValue === 'type') {
+      this.baseSVG.selectAll('circle').transition().attr('fill',
+        this.makerspaceTypeColorMapping[changes.selectedColorEncoding.currentValue]);
+      }
+    }
+  }
   /*This function adds zoom functionality on the map SVG layer */
   zoomed() {
     this.mapSVG.attr(
@@ -78,15 +104,16 @@ export class GeomapComponent implements OnInit {
     // adding data to the map
       const points = this.mapSVG.append('g');
 
-      points.selectAll('path')
+      points.selectAll('circle')
         .data(this.data.features)
         .enter()
-        .append('path')
+        .append('circle')
         .attr('fill', 'blue')
-        .attr( 'd', path)
+        .attr('cx', (d) => projection(d.geometry.coordinates)[0])
+        .attr('cy', (d) => projection(d.geometry.coordinates)[1])
+        .attr('r', (d) => d.properties.participant_year / 1000)
         .style('opacity', 0.5)
         .style('cursor', 'pointer')
-        .attr('r', this.data.participant_year)
         .on('click', (d) => this.nodeclick.emit(d));
   }
 

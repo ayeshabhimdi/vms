@@ -7,6 +7,7 @@ import { Component, OnInit, SimpleChange, ViewChild, ElementRef } from '@angular
 })
 export class SidenavComponent implements OnInit {
   @ViewChild('sidenav') sidenavElement: any;
+
   makerspaceName = 'sample';
   selectedMakerspace: any;
 
@@ -19,5 +20,6 @@ export class SidenavComponent implements OnInit {
     this.selectedMakerspace = data.properties;
     this.makerspaceName = data.properties.program_name;
     this.sidenavElement.open();
-    }
   }
+
+}
