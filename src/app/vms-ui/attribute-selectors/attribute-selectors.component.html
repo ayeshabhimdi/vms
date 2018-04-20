@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <mat-form-field class="attribute">
-  <mat-select placeholder="Size Encodings" (selectionChange)="setSize($event)">
+  <mat-select placeholder="Size Encodings" (selectionChange)="setSize($event)" [value]= "this.sizeAttributes[0]">
     <mat-option *ngFor = "let size of sizeAttributes" [value]="size">
       {{ size }}
     </mat-option>
@@ -9,7 +9,7 @@
 </mat-form-field>
 <br>
 <mat-form-field>
-  <mat-select placeholder="Color Encodings" (selectionChange)="setColor($event)">
+  <mat-select placeholder="Color Encodings" (selectionChange)="setColor($event)" [value]= "this.colorAttributes[0]">
     <mat-option *ngFor = "let color of colorAttributes" [value]="color">
       {{ color }}
     </mat-option>

@@ -12,7 +12,10 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson';
 
 import { DataPreprocessorService } from '../shared/geomap/data-preprocessor.service';
-import { makerspaceTypeColorMapping } from '../shared/geomap/encoding_mappings';
+import { makerspaceTypeColorMapping,
+  outOfSchoolTypeColorMapping,
+  participantTypeSizeMapping
+} from '../shared/geomap/encoding_mappings';
 import * as us10m from '../shared/geomap/us-10m.json';
 
 
@@ -25,6 +28,7 @@ import * as us10m from '../shared/geomap/us-10m.json';
 export class GeomapComponent implements OnInit, OnChanges {
   @Input() selectedColorEncoding: any;
   @Input() selectedSizeEncoding: any;
+  @Input() defaultPointSizeRange = [5, 22];
   @Output() nodeclick: EventEmitter<any> = new EventEmitter();
 
   parentNativeElement: ElementRef;
@@ -34,6 +38,12 @@ export class GeomapComponent implements OnInit, OnChanges {
   mapSVG: any;
   zoom: any;
   data: any;
+  yScale: any;
+  xAxis: any;
+  yAxis: any;
+  xScaleDomain: any;
+  yScaleDomain: any;
+  pointSizeScale: any;
 
   constructor(element: ElementRef, public dataPreprocess: DataPreprocessorService) {
     this.parentNativeElement = element.nativeElement; // to get native parent element of this component
@@ -41,20 +51,41 @@ export class GeomapComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.pointSizeScale = d3.scaleLinear().domain([0, d3.max(this.data.features, (d) => Number(d.properties.participant_day) )])
+        .range(this.defaultPointSizeRange);
     this.drawVisualization();
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // size encoding
     if (('selectedSizeEncoding' in changes) && !(changes.selectedSizeEncoding.isFirstChange())) {
-      console.log(changes);
-      this.baseSVG.selectAll('circle').transition().attr('r', 20);
+      if ( changes.selectedSizeEncoding.currentValue === 'participant_day') {
+        this.pointSizeScale = d3.scaleLinear().domain([0, d3.max(this.data.features, (d) => Number(d.properties.participant_day) )])
+        .range(this.defaultPointSizeRange);
+        this.baseSVG.selectAll('circle').transition().attr('r', (d) => this.pointSizeScale(d.properties.participant_day));
     }
+  }
+  if (('selectedSizeEncoding' in changes) && !(changes.selectedSizeEncoding.isFirstChange())) {
+    this.pointSizeScale = d3.scaleLinear().domain([0, d3.max(this.data.features, (d) => Number(d.properties.staff_overall) )])
+        .range(this.defaultPointSizeRange);
+    if ( changes.selectedSizeEncoding.currentValue === 'staff_overall') {
+    this.baseSVG.selectAll('circle').transition().attr('r', (d) => this.pointSizeScale(d.properties.staff_overall));
+  }
+}
+    // color encoding
     if (('selectedColorEncoding' in changes) && !(changes.selectedColorEncoding.isFirstChange())) {
       if ( changes.selectedColorEncoding.currentValue === 'type') {
       this.baseSVG.selectAll('circle').transition().attr('fill', (d) =>
         makerspaceTypeColorMapping[d.properties.type]);
       }
     }
+    if (('selectedColorEncoding' in changes) && !(changes.selectedColorEncoding.isFirstChange())) {
+      if ( changes.selectedColorEncoding.currentValue === 'out_of_school') {
+      this.baseSVG.selectAll('circle').transition().attr('fill', (d) =>
+      outOfSchoolTypeColorMapping[d.properties.out_of_school]);
+      }
+    }
+
   }
   /*This function adds zoom functionality on the map SVG layer */
   zoomed() {
@@ -62,6 +93,7 @@ export class GeomapComponent implements OnInit, OnChanges {
       'transform', d3.event.transform
     ); // applying an event transform on map svg layer.
   }
+
 
   drawVisualization() {
     const projection = d3.geoAlbers()
@@ -101,11 +133,12 @@ export class GeomapComponent implements OnInit, OnChanges {
         .data(this.data.features)
         .enter()
         .append('circle')
-        .attr('fill', 'blue')
+        .attr('fill', d => makerspaceTypeColorMapping[d.properties.type]) // pass d as array
+        .style('opacity', 0.5)
+        .attr('stroke', 'black')
         .attr('cx', (d) => projection(d.geometry.coordinates)[0])
         .attr('cy', (d) => projection(d.geometry.coordinates)[1])
-        .attr('r', (d) => d.properties.participant_year / 1000)
-        .style('opacity', 0.5)
+        .attr('r', (d) => this.pointSizeScale(d.properties.participant_day))
         .style('cursor', 'pointer')
         .on('click', (d) => this.nodeclick.emit(d));
   }

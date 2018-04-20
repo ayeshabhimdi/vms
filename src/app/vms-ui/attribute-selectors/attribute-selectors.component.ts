@@ -18,7 +18,7 @@ export class AttributeSelectorsComponent implements OnInit {
   colorEncodingSelected: any;
 
   sizeAttributeMap = {
-    'Participants': 'participant_year',
+    'Participants': 'participant_day',
     'Staff Members': 'staff_overall'
   };
   colorAttributeMap = {
