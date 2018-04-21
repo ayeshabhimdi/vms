@@ -6,8 +6,6 @@ import { VisualizationModule } from '../visualization/visualization.module';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { HomeComponent } from './home/home.component';
 import { AttributeSelectorsComponent } from './attribute-selectors/attribute-selectors.component';
-import { LegendExpansionComponent } from './legend-expansion/legend-expansion.component';
-
 
 @NgModule({
   imports: [
@@ -18,6 +16,6 @@ import { LegendExpansionComponent } from './legend-expansion/legend-expansion.co
   exports: [
    HomeComponent
   ],
-  declarations: [ SidenavComponent, HomeComponent, AttributeSelectorsComponent, LegendExpansionComponent ]
+  declarations: [SidenavComponent, HomeComponent, AttributeSelectorsComponent]
 })
 export class VmsUiModule { }

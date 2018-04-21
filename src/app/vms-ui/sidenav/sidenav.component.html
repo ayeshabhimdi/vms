@@ -16,6 +16,9 @@
       <mat-sidenav opened mode="side">
         <app-attribute-selectors #attributeSelector>
         </app-attribute-selectors>
+       <br><br><br>
+       Legend 
+       <hr>
       </mat-sidenav>
 
       <app-visualization-geomap
@@ -23,26 +26,6 @@
         [selectedColorEncoding]="attributeSelector.colorEncodingSelected"
         [selectedSizeEncoding] = "attributeSelector.sizeEncodingSelected">
       </app-visualization-geomap>
-<<<<<<< HEAD
-    </div>
-  </div>
-  <div class="legends">
-    <app-legend-expansion></app-legend-expansion>
-  </div>
-</mat-drawer-container>
-=======
-      
-      <mat-expansion-panel #panel >
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Legend
-            </mat-panel-title>
-            <mat-panel-description>
-              description
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-      </mat-expansion-panel>
   </mat-sidenav-content>
 
 </mat-sidenav-container>
->>>>>>> 016dc93a10671fd512a819e21bffd2307c5a63a3
