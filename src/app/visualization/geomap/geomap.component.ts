@@ -32,8 +32,8 @@ export class GeomapComponent implements OnInit, OnChanges {
   @Output() nodeclick: EventEmitter<any> = new EventEmitter();
 
   parentNativeElement: ElementRef;
-  width = 910;
-  height = 650;
+  width = window.innerWidth - 500;
+  height = window.innerHeight - 150;
   baseSVG: any;
   mapSVG: any;
   zoom: any;
@@ -51,7 +51,7 @@ export class GeomapComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.pointSizeScale = d3.scaleLinear().domain([0, d3.max(this.data.features, (d) => Number(d.properties.participant_day) )])
+    this.pointSizeScale = d3.scaleLinear().domain([0, d3.max(this.data.features, (d) => Number(d.properties.participant_day))])
         .range(this.defaultPointSizeRange);
     this.drawVisualization();
   }
@@ -97,9 +97,10 @@ export class GeomapComponent implements OnInit, OnChanges {
 
   drawVisualization() {
     const projection = d3.geoAlbers()
-                          .scale( 600 )
-                          .center( [0, 152.313] ); // added scale and center
-    const path = d3.geoPath().projection( projection );
+      .scale(700)
+      .center([0, 152.313]); // added scale and center
+
+    const path = d3.geoPath().projection(projection);
     const features = topojson.feature(us10m, us10m.objects.states).features;
 
     const container = d3.select(this.parentNativeElement)
@@ -110,7 +111,7 @@ export class GeomapComponent implements OnInit, OnChanges {
 
     this.baseSVG = container.append('svg') // base SVG container and its props
       .attr('preserveAspectRatio', 'xMidYMid slice')
-      .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
+      .attr('viewBox', '0 -120 ' + this.width + ' ' + this.height)
       .classed('svg-content-responsive', true)
       .call(this.zoom)
       .attr('fill', 'aliceblue');
@@ -122,25 +123,25 @@ export class GeomapComponent implements OnInit, OnChanges {
       .data(features)
       .enter()
       .append('path')
-      .style('fill', 'white')
-      .style('stroke', 'black')
+      .style('fill', '#FFFFFF')
+      .style('stroke', '#000000')
       .attr('d', path);
 
     // adding data to the map
-      const points = this.mapSVG.append('g');
+    const points = this.mapSVG.append('g');
 
-      points.selectAll('circle')
-        .data(this.data.features)
-        .enter()
-        .append('circle')
-        .attr('fill', d => makerspaceTypeColorMapping[d.properties.type]) // pass d as array
-        .style('opacity', 0.5)
-        .attr('stroke', 'black')
-        .attr('cx', (d) => projection(d.geometry.coordinates)[0])
-        .attr('cy', (d) => projection(d.geometry.coordinates)[1])
-        .attr('r', (d) => this.pointSizeScale(d.properties.participant_day))
-        .style('cursor', 'pointer')
-        .on('click', (d) => this.nodeclick.emit(d));
+    points.selectAll('circle')
+      .data(this.data.features)
+      .enter()
+      .append('circle')
+      .attr('fill', d => makerspaceTypeColorMapping[d.properties.type]) // pass d as array
+      .style('opacity', 0.5)
+      .attr('stroke', '#000000')
+      .attr('cx', (d) => projection(d.geometry.coordinates)[0])
+      .attr('cy', (d) => projection(d.geometry.coordinates)[1])
+      .attr('r', (d) => this.pointSizeScale(d.properties.participant_day))
+      .style('cursor', 'pointer')
+      .on('click', (d) => this.nodeclick.emit(d));
   }
 
 }
