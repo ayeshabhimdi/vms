@@ -25,8 +25,8 @@ export class DemographicsComponent implements OnInit, OnChanges {
   @Input() selectedMakerspace: any;
 
   parentNativeElement: ElementRef;
-  width = 400;
-  height = 350;
+  width = window.innerWidth / 4;
+  height = window.innerHeight / 4;
   baseSVG: any;
   xScale: any;
   yScale: any;
