@@ -44,6 +44,10 @@ export class DemographicsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.makeDomains();
+        this.setScales();
+        this.initVisualization();
+        this.drawBarChart();
   }
 
   ngOnChanges(changes: any) {
@@ -68,8 +72,8 @@ export class DemographicsComponent implements OnInit, OnChanges {
       .select('#demographicsContainer');
 
     this.baseSVG = container.append('svg')
-      .attr('width', this.width)
-      .attr('height', this.height)
+      .attr('width', this.width + 200)
+      .attr('height', this.height + 200)
       .append('g');
 
     this.makeDomains();
@@ -127,7 +131,7 @@ export class DemographicsComponent implements OnInit, OnChanges {
 
     this.yScale = d3Scale.scaleLinear()
     .domain(this.yScaleDomain)
-    .rangeRound([0, this.height - 15]);
+    .rangeRound([this.height - 15, 0]);
   }
 
   drawBarChart() {
@@ -150,11 +154,11 @@ export class DemographicsComponent implements OnInit, OnChanges {
    .attr('class', 'xAxis')
     .call(d3Axis.axisBottom(this.xScale));
 
-    // add the y Axis
-  this.baseSVG.append('g')
-    .attr('class', 'yAxis')
-    .attr('transform', 'translate(18,0)')
-    .call(d3Axis.axisLeft(this.yScale));
+  //   // add the y Axis
+  // this.baseSVG.append('g')
+  //   .attr('class', 'yAxis')
+  //   .attr('transform', 'translate(18,0)')
+  //   .call(d3Axis.axisLeft(this.yScale));
 
   }
 

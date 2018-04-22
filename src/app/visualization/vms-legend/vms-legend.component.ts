@@ -20,6 +20,7 @@ export class VmsLegendComponent implements OnInit, OnChanges {
   midNodeSizeLabel: string;
   minNodeSizeLabel: string;
   nodeSizeLegendTitle: string;
+  nodeColorLegendTitle: string;
   colorMappingSelected: 'type';
 
   sizeAttributeMap = {
@@ -64,6 +65,7 @@ export class VmsLegendComponent implements OnInit, OnChanges {
       this.updateNodesInLegend(maxNodeSize, midNodeSize, minNodeSize);
     }
     if ('selectedColorEncoding' in changes) {
+      this.nodeColorLegendTitle = this.colorAttributeMap[changes.selectedColorEncoding.currentValue];
       this.colorMappingSelected = changes.selectedColorEncoding.currentValue;
     }
   }
