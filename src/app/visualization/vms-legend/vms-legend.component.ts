@@ -37,7 +37,7 @@ export class VmsLegendComponent implements OnInit, OnChanges {
       { label: 'Museum', color: 'maroon' },
       { label: 'Library', color: 'orange' },
       { label: 'Mobile', color: 'green' },
-      { label: 'Mobile (e.g., bus)', color: 'green'},
+      { label: 'Mobile (eg. bus)', color: 'green'},
       { label: 'School', color: 'purple' },
       { label: 'Other', color: 'pink'}
     ],
