@@ -173,6 +173,6 @@ export class DemographicsComponent implements OnInit, OnChanges {
     .attr('dy', '1em')
     .attr('id', 'yAxisLabel')
     .style('text-anchor', 'middle')
-    .text('Demographics');
+    .text('Number of Student Participants');
   }
 }
