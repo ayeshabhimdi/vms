@@ -25,8 +25,8 @@ export class DemographicsComponent implements OnInit, OnChanges {
   @Input() selectedMakerspace: any;
 
   parentNativeElement: ElementRef;
-  width = window.innerWidth / 4;
-  height = window.innerHeight / 4;
+  width = window.innerWidth / 3;
+  height = window.innerHeight / 3;
   baseSVG: any;
   xScale: any;
   yScale: any;
@@ -38,9 +38,9 @@ export class DemographicsComponent implements OnInit, OnChanges {
   mappedData: any;
 
   constructor(element: ElementRef, dataPreprocess: DataPreprocessorService) {
-    this.parentNativeElement = element.nativeElement; // 1
+    this.parentNativeElement = element.nativeElement;
     console.log(this.selectedMakerspace);
-    this.data = dataPreprocess.processedData; // 12
+    this.data = dataPreprocess.processedData;
   }
 
   ngOnInit() {
@@ -76,7 +76,7 @@ export class DemographicsComponent implements OnInit, OnChanges {
   }
 
   makeDomains() {
-    this.xScaleDomain = ['age_0to5', 'age_6to10', 'age_11to15', 'age_16to20', 'age_above20', 'age_dont_know'];
+    this.xScaleDomain = ['age_0to5', 'age_6to10', 'age_11to15', 'age_16to20', 'age_above20' ];
     this.yScaleDomain = (({
       age_0to5,
       age_6to10,
@@ -89,16 +89,14 @@ export class DemographicsComponent implements OnInit, OnChanges {
           { key: 'age_6to10', value: age_6to10 },
           { key: 'age_11to15', value: age_11to15 },
           { key: 'age_16to20', value: age_16to20 },
-          { key: 'age_above20', value: age_above20 },
-          { key: 'age_dont_know', value: age_dont_know }
+          { key: 'age_above20', value: age_above20 }
         ];
         return [
         age_0to5,
         age_6to10,
         age_11to15,
         age_16to20,
-        age_above20,
-        age_dont_know
+        age_above20
       ];
     })(this.selectedMakerspace);
 
@@ -120,6 +118,7 @@ export class DemographicsComponent implements OnInit, OnChanges {
     //   ])(this.selectedMakerspace);
   }
   // set scales
+
   setScales() {
     this.xScale = d3Scale.scaleBand()
     .domain(this.xScaleDomain)
@@ -128,7 +127,7 @@ export class DemographicsComponent implements OnInit, OnChanges {
 
     this.yScale = d3Scale.scaleLinear()
     .domain(this.yScaleDomain)
-    .rangeRound([this.height, 0]);
+    .rangeRound([0, this.height - 15]);
   }
 
   drawBarChart() {
@@ -137,22 +136,24 @@ export class DemographicsComponent implements OnInit, OnChanges {
   .data(this.mappedData)
   .enter().append('rect')
   .attr('class', 'bar')
-  .attr('x', (d) => this.xScale(d.key) - 45)
+ .attr('y', (d) => Math.abs(this.height - this.yScale(d.value)))
+  .attr('height', (d) => this.yScale(d.value) - 18)
+  .attr('x', (d) => this.xScale(d.key))
   .attr('width', this.xScale.bandwidth())
-  .attr('y', (d) => this.yScale(d.value))
-  .attr('height', (d) => this.height - this.yScale(d.value) - 19);
+  .attr('transform', 'translate(20,0)');
+ // .attr('transform', (d,i) => 'translate(d.width*i, 0)');
 
     // add the x Axis
   this.baseSVG.append('g')
-   // .attr('transform', 'translate(0,' + this.height + ')')
-   .attr('transform', 'translate(20,' + (this.yScale(0) - 19) + ')')
+  // .attr('transform', 'translate(0,' + this.height + ')')
+   .attr('transform', (d) => 'translate(20,' + (this.height - 18)  + ')')
    .attr('class', 'xAxis')
     .call(d3Axis.axisBottom(this.xScale));
 
     // add the y Axis
   this.baseSVG.append('g')
     .attr('class', 'yAxis')
-    .attr('transform', 'translate(20,0)')
+    .attr('transform', 'translate(18,0)')
     .call(d3Axis.axisLeft(this.yScale));
 
   }

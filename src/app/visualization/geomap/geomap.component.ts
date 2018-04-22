@@ -135,7 +135,7 @@ export class GeomapComponent implements OnInit, OnChanges {
       .enter()
       .append('circle')
       .attr('fill', d => makerspaceTypeColorMapping[d.properties.type]) // pass d as array
-      .style('opacity', 0.5)
+      .style('opacity', 0.7)
       .attr('stroke', '#000000')
       .attr('cx', (d) => projection(d.geometry.coordinates)[0])
       .attr('cy', (d) => projection(d.geometry.coordinates)[1])

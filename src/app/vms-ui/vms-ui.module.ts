@@ -16,6 +16,6 @@ import { AttributeSelectorsComponent } from './attribute-selectors/attribute-sel
   exports: [
    HomeComponent
   ],
-  declarations: [SidenavComponent, HomeComponent, AttributeSelectorsComponent]
+  declarations: [SidenavComponent, HomeComponent, AttributeSelectorsComponent ]
 })
 export class VmsUiModule { }

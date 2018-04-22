@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import * as d3Array from 'd3-array';
 import * as d3Scale from 'd3-scale';
 import * as d3Selection from 'd3-selection';
-
+import * as d3Color from 'd3-color';
 import * as mapData from '../shared/geomap/data_usa_all.json';
 
 @Component({
@@ -33,13 +33,12 @@ export class VmsLegendComponent implements OnInit, OnChanges {
 
   colorMappings = {
     'type': [
-      { label: 'After-school clubs and activities', color: 'darkgreen' },
-      { label: 'Museum', color: 'maroon' },
-      { label: 'Library', color: 'orange' },
-      { label: 'Mobile', color: 'green' },
-      { label: 'Mobile (e.g., bus)', color: 'green'},
-      { label: 'School', color: 'purple' },
-      { label: 'Other', color: 'pink'}
+      { label: 'After-school clubs and activities', color: 'rgb(255, 0, 102, 0.7)' },
+      { label: 'Museum', color: 'rgba(51, 153, 255, 0.7)' },
+      { label: 'Library', color: 'rgba(255, 153, 0, 0.7)' },
+      { label: 'Mobile', color: 'rgba(102, 102, 153,0.7)' },
+      { label: 'School', color: 'rgba(102, 0, 102, 0.7)' },
+      { label: 'Other', color: 'rgba(255, 204, 0, 0.7)'}
     ],
     'out_of_school': [
       { label: 'In School', color: 'green' },
@@ -50,6 +49,7 @@ export class VmsLegendComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
+    // this.nodeSizeLegendTitle = this.sizeAttributeMap[0];
   }
 
   ngOnChanges(changes: SimpleChanges) {

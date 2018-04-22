@@ -1,11 +1,11 @@
 export const makerspaceTypeColorMapping = {
-  'After-school clubs and activities': 'darkgreen',
-  'Museum': 'maroon',
-  'Library': 'orange',
-  'Mobile': 'green',
-  'Mobile (e.g., bus)': 'green',
-  'Other': 'pink',
-  'School': 'purple'
+  'After-school clubs and activities': 'rgb(255, 0, 102)',
+  'Museum': 'rgb(51, 153, 255)',
+  'Library': 'rgb(255, 153, 0)',
+  'Mobile': 'rgb(102, 102, 153)',
+  'Mobile (e.g., bus)': 'rgb(102, 102, 153)',
+  'Other': 'rgb(255, 204, 0)',
+  'School': 'rgb(102, 0, 102)'
 };
 
 export const outOfSchoolTypeColorMapping = {
