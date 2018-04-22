@@ -11,6 +11,11 @@
     mode="side"
     [opened]="false"
     position="end">
+    <button type="button" mat-raised-button (click)="sidenav.toggle()" >
+        Close
+    </button>
+    <br>
+    <br>
     <b><u>{{ makerspaceName }}</u></b>
     <br><br>
     <app-demographics [selectedMakerspace]= "selectedMakerspace" ></app-demographics>
