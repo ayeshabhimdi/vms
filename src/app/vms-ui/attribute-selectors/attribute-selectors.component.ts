@@ -14,8 +14,6 @@ import { Component,
 export class AttributeSelectorsComponent implements OnInit {
   sizeAttributes = ['Participants', 'Staff Members'];
   colorAttributes = ['Makerspace Type', 'Out of School'];
-  sizeEncodingSelected: any;
-  colorEncodingSelected: any;
 
   sizeAttributeMap = {
     'Participants': 'participant_day',
@@ -25,6 +23,10 @@ export class AttributeSelectorsComponent implements OnInit {
     'Makerspace Type': 'type',
     'Out of School': 'out_of_school'
   };
+
+  sizeEncodingSelected = this.sizeAttributeMap[this.sizeAttributes[0]];
+  colorEncodingSelected = this.colorAttributeMap[this.colorAttributes[0]];
+
   constructor() { }
 
   ngOnInit() {

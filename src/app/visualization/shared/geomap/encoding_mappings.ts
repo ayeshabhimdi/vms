@@ -1,5 +1,5 @@
 export const makerspaceTypeColorMapping = {
-  'After-school clubs and activities': 'green',
+  'After-school clubs and activities': 'darkgreen',
   'Museum': 'maroon',
   'Library': 'orange',
   'Mobile': 'green',
@@ -14,11 +14,11 @@ export const outOfSchoolTypeColorMapping = {
 };
 
 export const participantTypeSizeMapping = {
-  // 'After-school clubs and activities': 'green',
+  // 'After-school clubs and activities': '12',
 
 };
 
 export const staffTypeSizeMapping = {
-  // 'After-school clubs and activities': 'green',
+  // 'After-school clubs and activities': '14',
 
 };

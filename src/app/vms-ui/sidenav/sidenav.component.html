@@ -13,12 +13,16 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-      <mat-sidenav opened mode="side">
+      <mat-sidenav opened mode="side" id="leftSidenav">
         <app-attribute-selectors #attributeSelector>
         </app-attribute-selectors>
-       <br><br><br>
-       Legend 
-       <hr>
+        <br><br>
+        <b>Legend</b> 
+        <hr><br>
+        <app-vms-legend 
+        [selectedColorEncoding]="attributeSelector.colorEncodingSelected"
+        [selectedSizeEncoding] = "attributeSelector.sizeEncodingSelected">
+        </app-vms-legend>
       </mat-sidenav>
 
       <app-visualization-geomap
